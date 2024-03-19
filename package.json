@@ -1,13 +1,12 @@
 {
-  "name": "@scholarcy/docx-merger",
-  "version": "0.2.0",
+  "name": "@valentiniljaz/docx-merger",
+  "version": "0.3.0",
   "license": "Apache-2.0",
   "description": "Javascript Library for Merging Docx file in NodeJS and Browser Environment.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0",
-    "validate": "echo \"Check For Test Coverage\" && exit 0",
+    "test": "node example/example.js",
     "clean": "rimraf dist",
     "build": "npm run clean && node build.js",
     "semantic-release": "semantic-release",
@@ -29,7 +28,7 @@
     "docx merge",
     "microsoft word"
   ],
-  "author": "Scholarcy Developers <developers@scholarcy.com>",
+  "author": "Valentin Iljaž <valentin.iljaz@gmail.com>",
   "dependencies": {
     "@xmldom/xmldom": "^0.8.6",
     "jszip": "^3.10.1"
@@ -41,8 +40,5 @@
   "devDependencies": {
     "esbuild": "^0.16.5",
     "rimraf": "^2.7.1"
-  },
-  "engines": {
-    "yarn": "YARN NO LONGER USED - use npm instead."
   }
 }

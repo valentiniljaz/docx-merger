@@ -30,7 +30,7 @@ class DocxMerger {
             this._files.push(await new JSZip().loadAsync(file));
         }
         if(this._files.length > 0) {
-            this.mergeBody(this._files)
+            await this.mergeBody(this._files)
         }
     }
 
@@ -39,7 +39,7 @@ class DocxMerger {
 					<w:r> \
 						<w:br w:type="page"/> \
 					</w:r> \
-				  </w:p>';
+				</w:p>';
 
         this._builder.push(pb);
     };
@@ -48,37 +48,38 @@ class DocxMerger {
         this._builder.push(xml);
     };
 
-    mergeBody(files) {
+    async mergeBody(files) {
         this._builder = this._body;
 
-        RelContentType.mergeContentTypes(files, this._contentTypes);
-        Media.prepareMediaFiles(files, this._media);
-        RelContentType.mergeRelations(files, this._rel);
+        await RelContentType.mergeContentTypes(files, this._contentTypes);
+        await Media.prepareMediaFiles(files, this._media);
+        await RelContentType.mergeRelations(files, this._rel);
 
-        bulletsNumbering.prepareNumbering(files);
-        bulletsNumbering.mergeNumbering(files, this._numbering);
-        Style.prepareStyles(files, this._style);
-        Style.mergeStyles(files, this._style);
+        await bulletsNumbering.prepareNumbering(files);
+        await bulletsNumbering.mergeNumbering(files, this._numbering);
+        await Style.prepareStyles(files, this._style);
+        await Style.mergeStyles(files, this._style);
 
-        files.forEach(async(zip, index) => {
-            let xmlString = await zip.file("word/document.xml").async('string');
-            xmlString = xmlString.substring(xmlString.indexOf("<w:body>") + 8);
-            xmlString = xmlString.substring(0, xmlString.indexOf("</w:body>"));
-            xmlString = xmlString.substring(0, xmlString.lastIndexOf("<w:sectPr"));
+        const merge = files.map(async(zip, index) => {
+            let xmlString = await zip.file('word/document.xml').async('string');
+            xmlString = xmlString.substring(xmlString.indexOf('<w:body>') + 8);
+            xmlString = xmlString.substring(0, xmlString.indexOf('</w:body>'));
+            xmlString = xmlString.substring(0, xmlString.lastIndexOf('<w:sectPr'));
 
             this.insertRaw(xmlString);
             if (this._pageBreak && index < files.length-1)
                 this.insertPageBreak();
         });
+        return Promise.all(merge);
     };
 
     async save(type) {
         const zip = this._files[0];
 
-        let xmlString = await zip.file("word/document.xml").async('string');
+        let xmlString = await zip.file('word/document.xml').async('string');
 
-        const startIndex = xmlString.indexOf("<w:body>") + 8;
-        const endIndex = xmlString.lastIndexOf("<w:sectPr");
+        const startIndex = xmlString.indexOf('<w:body>') + 8;
+        const endIndex = xmlString.lastIndexOf('<w:sectPr');
 
         xmlString = xmlString.replace(xmlString.slice(startIndex, endIndex), this._body.join(''));
 
@@ -88,11 +89,11 @@ class DocxMerger {
         await bulletsNumbering.generateNumbering(zip, this._numbering);
         await Style.generateStyles(zip, this._style);
 
-        zip.file("word/document.xml", xmlString);
+        zip.file('word/document.xml', xmlString);
 
         return await zip.generateAsync({
             type: type,
-            compression: "DEFLATE",
+            compression: 'DEFLATE',
             compressionOptions: {
                 level: 4
             }

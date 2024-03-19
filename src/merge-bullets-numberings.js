@@ -5,7 +5,7 @@ const {DOMParser} = require('@xmldom/xmldom');
 const prepareNumbering = function(files) {
     const serializer = new XMLSerializer();
 
-    files.forEach(async function(zip, index) {
+    const prepare = files.map(async function(zip, index) {
         const xmlBin = zip.file('word/numbering.xml');
         if (!xmlBin) {
             return;
@@ -67,24 +67,26 @@ const prepareNumbering = function(files) {
 
         zip.file("word/numbering.xml", xmlString);
     });
+    return Promise.all(prepare);
 };
 
 const mergeNumbering = function(files, _numbering) {
-    files.forEach(async function(zip) {
+    const merge = files.map(async function(zip) {
         const xmlBin = zip.file('word/numbering.xml');
         if (!xmlBin) {
-          return;
+            return;
         }
         let xmlString = await xmlBin.async('string');
         xmlString = xmlString.substring(xmlString.indexOf("<w:abstractNum "), xmlString.indexOf("</w:numbering"));
         _numbering.push(xmlString);
     });
+    return Promise.all(merge);
 };
 
 const generateNumbering = async function(zip, _numbering) {
     const xmlBin = zip.file('word/numbering.xml');
     if (!xmlBin) {
-      return;
+        return;
     }
     let xmlString = await xmlBin.async('string');
     const startIndex = xmlString.indexOf("<w:abstractNum ");

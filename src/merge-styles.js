@@ -4,8 +4,8 @@ const {DOMParser} = require('@xmldom/xmldom');
 const prepareStyles = function(files, style) {
     const serializer = new XMLSerializer();
 
-    files.forEach(async function(zip, index) {
-        let xmlString = await zip.file("word/styles.xml").async('string');
+    const prepare = files.map(async function(zip, index) {
+        let xmlString = await zip.file('word/styles.xml').async('string');
         let xml = new DOMParser().parseFromString(xmlString, 'text/xml');
         const nodes = xml.getElementsByTagName('w:style');
 
@@ -41,35 +41,38 @@ const prepareStyles = function(files, style) {
             }
         }
 
-        const startIndex = xmlString.indexOf("<w:styles ");
+        const startIndex = xmlString.indexOf('<w:styles ');
         xmlString = xmlString.replace(xmlString.slice(startIndex), serializer.serializeToString(xml.documentElement));
 
-        zip.file("word/styles.xml", xmlString);
+        zip.file('word/styles.xml', xmlString);
     });
+
+    return Promise.all(prepare);
 };
 
-const mergeStyles = function(files, _styles) {
-    files.forEach(async function(zip) {
-        let xmlString = await zip.file("word/styles.xml").async('string');
-        xmlString = xmlString.substring(xmlString.indexOf("<w:style "), xmlString.indexOf("</w:styles"));
+const mergeStyles = async function(files, _styles) {
+    const merge = files.map(async function(zip) {
+        let xmlString = await zip.file('word/styles.xml').async('string');
+        xmlString = xmlString.substring(xmlString.indexOf('<w:style '), xmlString.indexOf('</w:styles'));
         _styles.push(xmlString);
     });
+    return Promise.all(merge);
 };
 
 const updateStyleRel_Content = async function(zip, fileIndex, styleId) {
-    let xmlString = await zip.file("word/document.xml").async('string');
+    let xmlString = await zip.file('word/document.xml').async('string');
     xmlString = xmlString.replace(new RegExp('w:val="' + styleId + '"', 'g'), 'w:val="' + styleId + '_' + fileIndex + '"');
-    zip.file("word/document.xml", xmlString);
+    zip.file('word/document.xml', xmlString);
 };
 
 const generateStyles = async function(zip, _style) {
-    let xmlString = await zip.file("word/styles.xml").async('string');
-    const startIndex = xmlString.indexOf("<w:style ");
-    const endIndex = xmlString.indexOf("</w:styles>");
+    let xmlString = await zip.file('word/styles.xml').async('string');
+    const startIndex = xmlString.indexOf('<w:style ');
+    const endIndex = xmlString.indexOf('</w:styles>');
 
     xmlString = xmlString.replace(xmlString.slice(startIndex, endIndex), _style.join(''));
 
-    zip.file("word/styles.xml", xmlString);
+    zip.file('word/styles.xml', xmlString);
 };
 
 module.exports = {

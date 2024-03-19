@@ -3,8 +3,8 @@ const {DOMParser} = require('@xmldom/xmldom');
 
 
 const mergeContentTypes = function(files, _contentTypes) {
-    files.forEach(async (zip) => {
-        const xmlString = await zip.file("[Content_Types].xml").async('string');
+    const merge = files.map(async (zip) => {
+        const xmlString = await zip.file('[Content_Types].xml').async('string');
         const xml = new DOMParser().parseFromString(xmlString, 'text/xml');
 
         const childNodes = xml.getElementsByTagName('Types')[0].childNodes;
@@ -17,11 +17,12 @@ const mergeContentTypes = function(files, _contentTypes) {
             }
         }
     });
+    return Promise.all(merge);
 };
 
 const mergeRelations = function(files, _rel) {
-    files.forEach(async (zip) => {
-        const xmlString = await zip.file("word/_rels/document.xml.rels").async('string');
+    const merge = files.map(async (zip) => {
+        const xmlString = await zip.file('word/_rels/document.xml.rels').async('string');
         const xml = new DOMParser().parseFromString(xmlString, 'text/xml');
 
         const childNodes = xml.getElementsByTagName('Relationships')[0].childNodes;
@@ -34,10 +35,11 @@ const mergeRelations = function(files, _rel) {
             }
         }
     });
+    return Promise.all(merge);
 };
 
 const generateContentTypes = async function(zip, _contentTypes) {
-    let xmlString = await zip.file("[Content_Types].xml").async('string');
+    let xmlString = await zip.file('[Content_Types].xml').async('string');
     const xml = new DOMParser().parseFromString(xmlString, 'text/xml');
     const serializer = new XMLSerializer();
 
@@ -47,14 +49,14 @@ const generateContentTypes = async function(zip, _contentTypes) {
         types.appendChild(_contentTypes[node]);
     }
 
-    const startIndex = xmlString.indexOf("<Types");
+    const startIndex = xmlString.indexOf('<Types');
     xmlString = xmlString.replace(xmlString.slice(startIndex), serializer.serializeToString(types));
 
-    zip.file("[Content_Types].xml", xmlString);
+    zip.file('[Content_Types].xml', xmlString);
 };
 
 const generateRelations = async function(zip, _rel) {
-    let xmlString = await zip.file("word/_rels/document.xml.rels").async('string');
+    let xmlString = await zip.file('word/_rels/document.xml.rels').async('string');
     const xml = new DOMParser().parseFromString(xmlString, 'text/xml');
     const serializer = new XMLSerializer();
 
@@ -64,10 +66,10 @@ const generateRelations = async function(zip, _rel) {
         types.appendChild(_rel[node]);
     }
 
-    const startIndex = xmlString.indexOf("<Relationships");
+    const startIndex = xmlString.indexOf('<Relationships');
     xmlString = xmlString.replace(xmlString.slice(startIndex), serializer.serializeToString(types));
 
-    zip.file("word/_rels/document.xml.rels", xmlString);
+    zip.file('word/_rels/document.xml.rels', xmlString);
 };
 
 

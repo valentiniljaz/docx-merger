@@ -1,17 +1,17 @@
-# Docx-merger
+# Docx-Merger
 
 Javascript Library for Merging Docx files.
-This is a fork of https://github.com/apurvaojas/docx-merge with updated dependencies.
+This is a fork of https://github.com/scholarcy/docx-merger with updated dependencies and some fixes.
 
 It's only been tested with NodeJS but according to the original authors it should work in the browser too.
 
-The fork has replaced webpack with esbuild as the build tool, and yarn for npm.
+The fork has replaced webpack with esbuild as the build tool.
 
 ## Purpose
 
- To merge docx file using javascript which has rich contents.
+ To merge docx files with rich contents using javascript.
 
- The Library Preserves the Styles, Tables, Images, Bullets and Numberings of input files.
+ The Library preserves the Styles, Tables, Images, Bullets and Numberings of input files.
 
 ## Table of Contents
 
@@ -21,13 +21,11 @@ The fork has replaced webpack with esbuild as the build tool, and yarn for npm.
   1. [TODO](#todo)
   1. [Known Issues](#known-issues)
 
-
 ## Installation
 
-
-  ```bash
-  npm install @scholarcy/docx-merger
-  ```
+```bash
+npm install @valentiniljaz/docx-merger
+```
 
 **[Back to top](#table-of-contents)**
 
@@ -37,21 +35,20 @@ Read input files as binary and pass it to the `DocxMerger` constructor fuction a
 
 Then call the save function with first argument as `nodebuffer`, check the example below.
 
-  ```javascript
-  const DocxMerger = require('./../src/index');
+```javascript
+const DocxMerger = require('./../src/index');
 
 const fs = require('fs');
 const path = require('path');
 
 (async () => {
-    const file1 = fs.readFileSync(path.resolve(__dirname, 'template.docx'), 'binary');
-    const file2 = fs.readFileSync(path.resolve(__dirname, 'template1.docx'), 'binary');
+    const file1 = fs.readFileSync(path.resolve(__dirname, 'template-0.docx'), 'binary');
+    const file2 = fs.readFileSync(path.resolve(__dirname, 'template-1.docx'), 'binary');
     const docx = new DocxMerger();
     await docx.initialize({},[file1,file2]);
     //SAVING THE DOCX FILE
     const data = await docx.save('nodebuffer');
-    await fs.writeFile("output.zip", data);
-    await fs.writeFile("output.docx", data);
+    fs.writeFileSync("output.docx", data);
 })()
   ```
 
@@ -67,6 +64,6 @@ const path = require('path');
 
 ### Known Issues
 
-  - Microsoft Word in windows Shows some error due to numbering.
+  - Microsoft Word in Windows shows some error due to numbering and styling.
 
   **[Back to top](#table-of-contents)**
