@@ -4,7 +4,6 @@ const Media = require('./merge-media');
 const RelContentType = require('./merge-relations-and-content-type');
 const bulletsNumbering = require('./merge-bullets-numberings');
 
-
 class DocxMerger {
     constructor () {
         this._body = [];
@@ -48,6 +47,10 @@ class DocxMerger {
         this._builder.push(xml);
     };
 
+    /**
+     * @param {Buffer[]} files 
+     * @returns {Promise<void>}
+     */
     async mergeBody(files) {
         this._builder = this._body;
 
@@ -70,7 +73,7 @@ class DocxMerger {
             if (this._pageBreak && index < files.length-1)
                 this.insertPageBreak();
         });
-        return Promise.all(merge);
+        return Promise.all(merge).then(() => {});
     };
 
     async save(type) {
