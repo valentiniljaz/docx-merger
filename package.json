@@ -1,6 +1,6 @@
 {
   "name": "@valentiniljaz/docx-merger",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "Apache-2.0",
   "description": "Javascript Library for Merging Docx file in NodeJS and Browser Environment.",
   "main": "dist/index.cjs.js",
@@ -30,7 +30,7 @@
   ],
   "author": "Valentin Iljaž <valentin.iljaz@gmail.com>",
   "dependencies": {
-    "@xmldom/xmldom": "^0.8.6",
+    "@xmldom/xmldom": "^0.9.8",
     "jszip": "^3.10.1"
   },
   "bugs": {
@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/valentiniljaz/docx-merger#readme",
   "devDependencies": {
-    "esbuild": "^0.16.5",
-    "rimraf": "^2.7.1"
+    "esbuild": "^0.25.1",
+    "rimraf": "^6.0.1"
   }
 }

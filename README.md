@@ -62,3 +62,18 @@ const path = require('path');
 - Microsoft Word in Windows shows some error due to numbering and styling.
 
 **[Back to top](#table-of-contents)**
+
+
+## See also
+
+If you find this Rollup plugin useful, you might also be interested in my other project, [Webacus](https://webacus.dev).
+
+<p>
+  <a href="https://webacus.dev" title="Webacus">
+    <img src="https://webacus.dev/imgs/icons/webacus_square_logo.jpg" alt="Webacus" width="100px">
+  </a>
+</p>
+
+<p>
+  Webacus is the all-in-one toolkit designed to streamline the workflow of web developers. It solves the common problem of needing to quickly perform micro-tasks like encoding/decoding strings or formatting data by providing a unified platform with over 120 interconnected tools. Instead of searching for individual online tools, developers can access everything they need within Webacus, benefiting from a consistent interface and the ability to chain operations together for complex tasks. This local-first approach ensures speed, security, and privacy, allowing developers to focus on coding rather than managing tools.
+</p>
