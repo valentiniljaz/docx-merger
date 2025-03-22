@@ -66,7 +66,7 @@ const path = require('path');
 
 ## See also
 
-If you find this Rollup plugin useful, you might also be interested in my other project, [Webacus](https://webacus.dev).
+If you find this library useful, you might also be interested in my other project, [Webacus](https://webacus.dev).
 
 <p>
   <a href="https://webacus.dev" title="Webacus">
